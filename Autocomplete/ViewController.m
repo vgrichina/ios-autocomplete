@@ -87,10 +87,19 @@
 	[self.filteredListContent removeAllObjects];
 
     for (NSString *name in self.listContent) {
-        NSComparisonResult result = [name compare:searchText options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)
-                                            range:NSMakeRange(0, [searchText length])];
-        if (result == NSOrderedSame) {
-            [self.filteredListContent addObject:name];
+        NSRange range = NSMakeRange(0, [searchText length]);
+
+        // Iterate through name parts separated by space
+        while (range.location != NSNotFound) {
+            NSComparisonResult result = [name compare:searchText options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)
+                                                range:range];
+            if (result == NSOrderedSame) {
+                [self.filteredListContent addObject:name];
+            }
+
+            range.location = [name rangeOfString:@" " options:NSLiteralSearch
+                                           range:NSMakeRange(range.location, [name length] - range.location)].location;
+            range.location += (range.location == NSNotFound) ? 0 : 1;
         }
 	}
 }
