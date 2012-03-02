@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UITableViewController <UISearchDisplayDelegate, UISearchBarDelegate>
+
+@property (nonatomic, strong) NSArray *listContent;
+@property (nonatomic, strong) NSMutableArray *filteredListContent;
+
+@property (nonatomic, copy) NSString *savedSearchTerm;
+@property (nonatomic) NSInteger savedScopeButtonIndex;
+@property (nonatomic) BOOL searchWasActive;
 
 @end
