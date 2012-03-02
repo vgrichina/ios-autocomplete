@@ -14,16 +14,6 @@
 
 @synthesize window, viewController, navController;
 
-- (void)loadData
-{
-    NSString *fileContent = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"fake-full-names"
-                                                                                               ofType:@"txt"]
-                                                      encoding:NSUTF8StringEncoding
-                                                         error:NULL];
-    self.viewController.listContent = [fileContent componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-    [self.viewController.tableView reloadData];
-}
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -34,9 +24,6 @@
 
     self.window.rootViewController = self.navController;
     [self.window makeKeyAndVisible];
-
-    // TODO: Make this non-blocking
-    [self loadData];
 
     return YES;
 }

@@ -8,9 +8,18 @@
 
 #import "ViewController.h"
 
+static BOOL IsOk(sqlite3 *db, int result) {
+    if (result != SQLITE_OK) {
+        NSLog(@"Database error: %s", sqlite3_errmsg(db));
+        return NO;
+    }
+
+    return YES;
+}
+
 @implementation ViewController
 
-@synthesize listContent, filteredListContent, searchWasActive, savedSearchTerm, savedScopeButtonIndex;
+@synthesize filteredListContent, searchWasActive, savedSearchTerm, savedScopeButtonIndex;
 
 #pragma mark -
 #pragma mark Lifecycle methods
@@ -18,6 +27,17 @@
 - (void)viewDidLoad
 {
     self.filteredListContent = [NSMutableArray array];
+
+    if (sqlite3_open([[NSBundle mainBundle] pathForResource:@"names" ofType:@"sqlite"].UTF8String, &db)) {
+        NSLog(@"Cannot open database: %s", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return;
+    }
+
+    if (!IsOk(db, sqlite3_prepare_v2(db, "SELECT name FROM names, names_index \
+                        WHERE names.rowid = names_index.name_id AND name_part LIKE ? LIMIT 10", -1, &stmt, NULL))) {
+        return;
+    }
 
     // restore search settings if they were saved in didReceiveMemoryWarning.
     if (self.savedSearchTerm) {
@@ -28,13 +48,15 @@
         self.savedSearchTerm = nil;
     }
 
-	[self.tableView reloadData];
-	self.tableView.scrollEnabled = YES;
+    [self.tableView reloadData];
+    self.tableView.scrollEnabled = YES;
 }
 
 - (void)viewDidUnload
 {
     self.filteredListContent = nil;
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -52,9 +74,9 @@
 {
 	if (tableView == self.searchDisplayController.searchResultsTableView) {
         return [self.filteredListContent count];
-    } else {
-        return [self.listContent count];
     }
+
+    return 0;
 }
 
 
@@ -71,8 +93,6 @@
 	NSString *name = nil;
 	if (tableView == self.searchDisplayController.searchResultsTableView) {
         name = [self.filteredListContent objectAtIndex:indexPath.row];
-    } else {
-        name = [self.listContent objectAtIndex:indexPath.row];
     }
 
 	cell.textLabel.text = name;
@@ -86,22 +106,24 @@
 {
 	[self.filteredListContent removeAllObjects];
 
-    for (NSString *name in self.listContent) {
-        NSRange range = NSMakeRange(0, [searchText length]);
+    if (!IsOk(db, sqlite3_reset(stmt))) {
+        return;
+    }
 
-        // Iterate through name parts separated by space
-        while (range.location != NSNotFound) {
-            NSComparisonResult result = [name compare:searchText options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)
-                                                range:range];
-            if (result == NSOrderedSame) {
-                [self.filteredListContent addObject:name];
-            }
+    if (!IsOk(db, sqlite3_clear_bindings(stmt))) {
+        return;
+    }
 
-            range.location = [name rangeOfString:@" " options:NSLiteralSearch
-                                           range:NSMakeRange(range.location, [name length] - range.location)].location;
-            range.location += (range.location == NSNotFound) ? 0 : 1;
-        }
-	}
+    if (!IsOk(db, sqlite3_bind_text(stmt, 1, [searchText stringByAppendingString:@"%"].UTF8String, -1, SQLITE_TRANSIENT))) {
+        return;
+    }
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        [self.filteredListContent addObject:
+         [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, 0)]];
+    }
+
+    [self.filteredListContent sortUsingSelector:@selector(caseInsensitiveCompare:)];
 }
 
 #pragma mark -

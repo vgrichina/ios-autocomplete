@@ -8,9 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UITableViewController <UISearchDisplayDelegate, UISearchBarDelegate>
+#import <sqlite3.h>
 
-@property (nonatomic, strong) NSArray *listContent;
+@interface ViewController : UITableViewController <UISearchDisplayDelegate, UISearchBarDelegate> {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+}
+
 @property (nonatomic, strong) NSMutableArray *filteredListContent;
 
 @property (nonatomic, copy) NSString *savedSearchTerm;

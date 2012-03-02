@@ -16,6 +16,8 @@
 		D5ED17F115013C1400D78E99 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5ED17F015013C1400D78E99 /* ViewController.m */; };
 		D5ED17F415013C1400D78E99 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D5ED17F215013C1400D78E99 /* ViewController.xib */; };
 		D5ED18031501452500D78E99 /* fake-full-names.txt in Resources */ = {isa = PBXBuildFile; fileRef = D5ED18021501452500D78E99 /* fake-full-names.txt */; };
+		D5ED180615015EF100D78E99 /* names.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D5ED180515015EF100D78E99 /* names.sqlite */; };
+		D5ED18081501671700D78E99 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5ED18071501671700D78E99 /* libsqlite3.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,8 @@
 		D5ED17F015013C1400D78E99 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		D5ED17F315013C1400D78E99 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
 		D5ED18021501452500D78E99 /* fake-full-names.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "fake-full-names.txt"; sourceTree = "<group>"; };
+		D5ED180515015EF100D78E99 /* names.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = names.sqlite; sourceTree = "<group>"; };
+		D5ED18071501671700D78E99 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5ED18081501671700D78E99 /* libsqlite3.dylib in Frameworks */,
 				D5ED17DE15013C1400D78E99 /* UIKit.framework in Frameworks */,
 				D5ED17E015013C1400D78E99 /* Foundation.framework in Frameworks */,
 				D5ED17E215013C1400D78E99 /* CoreGraphics.framework in Frameworks */,
@@ -69,6 +74,7 @@
 		D5ED17DC15013C1400D78E99 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D5ED18071501671700D78E99 /* libsqlite3.dylib */,
 				D5ED17DD15013C1400D78E99 /* UIKit.framework */,
 				D5ED17DF15013C1400D78E99 /* Foundation.framework */,
 				D5ED17E115013C1400D78E99 /* CoreGraphics.framework */,
@@ -92,6 +98,7 @@
 		D5ED17E415013C1400D78E99 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D5ED180515015EF100D78E99 /* names.sqlite */,
 				D5ED18021501452500D78E99 /* fake-full-names.txt */,
 				D5ED17E515013C1400D78E99 /* Autocomplete-Info.plist */,
 				D5ED17E615013C1400D78E99 /* InfoPlist.strings */,
@@ -154,6 +161,7 @@
 				D5ED17E815013C1400D78E99 /* InfoPlist.strings in Resources */,
 				D5ED17F415013C1400D78E99 /* ViewController.xib in Resources */,
 				D5ED18031501452500D78E99 /* fake-full-names.txt in Resources */,
+				D5ED180615015EF100D78E99 /* names.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
