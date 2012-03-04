@@ -34,8 +34,8 @@ static BOOL IsOk(sqlite3 *db, int result) {
         return;
     }
 
-    if (!IsOk(db, sqlite3_prepare_v2(db, "SELECT name FROM names, names_index \
-                        WHERE names.rowid = names_index.name_id AND name_part LIKE ? LIMIT 10", -1, &stmt, NULL))) {
+    if (!IsOk(db, sqlite3_prepare_v2(db, "SELECT name FROM names, parts, names_parts \
+                        WHERE names.rowid = names_parts.name_id AND parts.rowid = names_parts.part_id AND part LIKE ? LIMIT 10", -1, &stmt, NULL))) {
         return;
     }
 
@@ -104,6 +104,8 @@ static BOOL IsOk(sqlite3 *db, int result) {
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
+    NSLog(@"Start filtering: %@", searchText);
+
 	[self.filteredListContent removeAllObjects];
 
     if (!IsOk(db, sqlite3_reset(stmt))) {
@@ -124,6 +126,8 @@ static BOOL IsOk(sqlite3 *db, int result) {
     }
 
     [self.filteredListContent sortUsingSelector:@selector(caseInsensitiveCompare:)];
+
+    NSLog(@"Finish filtering: %@", searchText);
 }
 
 #pragma mark -
